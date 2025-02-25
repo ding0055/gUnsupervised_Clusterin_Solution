@@ -53,3 +53,11 @@ def plot_confusion_matrix(y_true, y_pred, classes, normalize=False, title='Confu
     plt.ylabel('Actual', fontsize=12)
     plt.title(title, fontsize=16)
     plt.show()
+
+def plot_clusters(model,df):
+    df['Cluster'] = model.labels_
+    fig, ax = plt.subplots()
+    ax  = sns.scatterplot(x='Annual_Income', y = 'Spending_Score', data=df, hue='Cluster', palette='colorblind')
+    fig.savefig("visualize_clusters.png")
+
+    

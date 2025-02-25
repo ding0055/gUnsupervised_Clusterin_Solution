@@ -1,129 +1,57 @@
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 import pickle
 import streamlit as st
+import numpy as np
 
 # Set the page title and description
-st.title("Credit Loan Eligibility Predictor")
+st.title("Customer Segmentation App")
 st.write("""
-This app predicts whether a loan applicant is eligible for a loan 
-based on various personal and financial characteristics.
+This app groups customers into different clusters based on their 
+age, annual income, and spending score using an Unsupervised Clustering Model.
 """)
 
-# # Optional password protection (remove if not needed)
-# password_guess = st.text_input("Please enter your password?")
-# # this password is stores in streamlit secrets
-# if password_guess != st.secrets["password"]:
-#     st.stop()
-
-# Load the pre-trained model
-rf_pickle = open("models/RFmodel.pkl", "rb")
-rf_model = pickle.load(rf_pickle)
-rf_pickle.close()
-
+# Load the pre-trained clustering model
+model_pickle = open("models/kmodel.pkl", "rb")
+clustering_model = pickle.load(model_pickle)
+model_pickle.close()
 
 # Prepare the form to collect user inputs
 with st.form("user_inputs"):
-    st.subheader("Loan Applicant Details")
-    
+    st.subheader("Customer Details")
+
     # Gender input
     Gender = st.selectbox("Gender", options=["Male", "Female"])
-    
-    # Marital Status
-    Married = st.selectbox("Marital Status", options=["Yes", "No"])
-    
-    # Dependents
-    Dependents = st.selectbox("Number of Dependents", 
-                               options=["0", "1", "2", "3+"])
-    
-    # Education
-    Education = st.selectbox("Education Level", 
-                              options=["Graduate", "Not Graduate"])
-    
-    # Self Employment
-    Self_Employed = st.selectbox("Self Employed", options=["Yes", "No"])
-    
-    # Applicant Income
-    ApplicantIncome = st.number_input("Applicant Monthly Income", 
-                                       min_value=0, 
-                                       step=1000)
-    
-    # Coapplicant Income
-    CoapplicantIncome = st.number_input("Coapplicant Monthly Income", 
-                                         min_value=0, 
-                                         step=1000)
-    
-    # Loan Amount
-    LoanAmount = st.number_input("Loan Amount", 
-                                  min_value=0, 
-                                  step=1000)
-    
-    # Loan Amount Term
-    Loan_Amount_Term = st.selectbox("Loan Amount Term (Months)", 
-                                    options=["360", "180", "240", "120", "60"])
-    
-    # Credit History
-    Credit_History = st.selectbox("Credit History", 
-                                  options=["1", "0"])
-    
-    # Property Area
-    Property_Area = st.selectbox("Property Area", 
-                                 options=["Urban", "Semiurban", "Rural"])
-    
+
+    # Age
+    Age = st.number_input("Age", min_value=18, max_value=100, step=1)
+
+    # Annual Income
+    Annual_Income = st.number_input("Annual Income (10-200)", min_value=10, max_value=200, step=1)
+
+    # Spending Score
+    Spending_Score = st.number_input("Spending Score (1-100)", min_value=1, max_value=100, step=1)
+
     # Submit button
-    submitted = st.form_submit_button("Predict Loan Eligibility")
+    submitted = st.form_submit_button("Find My Cluster")
 
-
-# Handle the dummy variables to pass to the model
+# Process input and perform clustering prediction
 if submitted:
-    Gender_Male = 0 if Gender == "Female" else 1
+    # Convert categorical inputs into numerical features
+    Gender_Male = 1 if Gender == "Male" else 0
     Gender_Female = 1 if Gender == "Female" else 0
 
-    Married_Yes = 1 if Married == "Yes" else 0
-    Married_No = 1 if Married == "No" else 0
+    # Prepare the input for clustering prediction
+    clustering_input = [[Annual_Income, Spending_Score]]
 
-    # Handle dependents
-    Dependents_0 = 1 if Dependents == "0" else 0
-    Dependents_1 = 1 if Dependents == "1" else 0
-    Dependents_2 = 1 if Dependents == "2" else 0
-    Dependents_3 = 1 if Dependents == "3+" else 0
-
-    Education_Graduate = 1 if Education == "Graduate" else 0
-    Education_Not_Graduate = 1 if Education == "Not Graduate" else 0
-
-    Self_Employed_Yes = 1 if Self_Employed == "Yes" else 0
-    Self_Employed_No = 1 if Self_Employed == "No" else 0
-
-    Property_Area_Rural = 1 if Property_Area == "Rural" else 0
-    Property_Area_Semiurban = 1 if Property_Area == "Semiurban" else 0
-    Property_Area_Urban = 1 if Property_Area == "Urban" else 0
-
-    # Convert Loan Amount Term and Credit History to integers
-    Loan_Amount_Term = int(Loan_Amount_Term)
-    Credit_History = int(Credit_History)
-
-    # Prepare the input for prediction. This has to go in the same order as it was trained
-    prediction_input = [[ApplicantIncome, CoapplicantIncome, LoanAmount,
-        Loan_Amount_Term, Credit_History, Gender_Female, Gender_Male,
-        Married_No, Married_Yes, Dependents_0, Dependents_1,
-        Dependents_2, Dependents_3, Education_Graduate,
-        Education_Not_Graduate, Self_Employed_No, Self_Employed_Yes,
-        Property_Area_Rural, Property_Area_Semiurban, Property_Area_Urban
-    ]]
-
-    # Make prediction
-    new_prediction = rf_model.predict(prediction_input)
+    # Perform clustering prediction
+    cluster_number = clustering_model.predict(clustering_input)[0]
 
     # Display result
-    st.subheader("Prediction Result:")
-    if new_prediction[0] == 1:
-        st.write("You are eligible for the loan!")
-    else:
-        st.write("Sorry, you are not eligible for the loan.")
+    st.subheader("Customer Segment Result:")
+    st.write(f"You have been assigned to **Cluster {cluster_number}** based on your profile.")
 
 st.write(
-    """We used a machine learning (Random Forest) model to predict your eligibility, the features used in this prediction are ranked by relative
-    importance below."""
+    """We used an **Unsupervised Clustering Model** to segment customers. 
+    The clusters represent different customer groups based on income, age, and spending behavior."""
 )
-st.image("feature_importance.png")
+st.image("visualize_clusters.png")
