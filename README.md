@@ -1,49 +1,49 @@
-# credit_eligibility_application
-This app has been built using Streamlit and deployed with Streamlit community cloud
-
-[Visit the app here](https://loan-application-app.streamlit.app/)
-
-password - streamlit
-
-This application predicts whether someone is eligible for a loan based on inputs derived from the German Credit Risk dataset. The model aims to help users assess loan eligibility by leveraging machine learning predictions.
+# Customer Segmentation App
+This application implements K-Means clustering to segment customers into distinct groups based on demographic and behavioral features, with an interactive Streamlit interface for real-time predictions.
 
 ## Features
-- User-friendly interface powered by Streamlit.
-- Input form to enter details such as credit history, loan amount, income, and other relevant factors.
-- Real-time prediction of loan eligibility based on the trained model.
-- Accessible via Streamlit Community Cloud.
+- Interactive user input form for dynamic clustering
+- Pre-trained model integration for instant predictions
+- Visual cluster representation with explanatory imagery
+- Production-ready deployment via Streamlit
+
 
 ## Dataset
-The application is trained on the **German Credit Risk dataset**, a widely used dataset for evaluating creditworthiness. It includes features like:
+The application is trained on the **mall customers dataset**, It includes features like:
+- Customer_ID
+- Gender
 - Age
-- Job
-- Housing status
-- Credit amount
-- Duration of credit
-- Purpose of loan
-- And other factors influencing credit risk.
+- Annual_Income
+- Spending_Score
+
+## Feature Engineering
+
+Feature selection: Focus on key clustering drivers (Income + Spending Score)
+Categorical conversion: Binary encoding for gender
+Input scaling: Presumes pre-scaled training data (model-compatible)
 
 ## Technologies Used
-- **Streamlit**: For building the web application.
-- **Scikit-learn**: For model training and evaluation.
-- **Pandas** and **NumPy**: For data preprocessing and manipulation.
-- **Matplotlib** and **Seaborn**: For exploratory data analysis and visualization (if applicable).
+
+Python: Core application logic
+Streamlit: Interactive web interface
+Scikit-learn: K-Means clustering algorithm
+Pandas/NumPy: Data handling
+Pickle: Model serialization
 
 ## Model
-The predictive model is trained using the German Credit Risk dataset. It applies preprocessing steps like encoding categorical variables and scaling numerical features. The classification model used may include algorithms such as Logistic Regression, Random Forest, or XGBoost.
 
-## Future Enhancements
-* Adding support for multiple datasets.
-* Incorporating explainability tools like SHAP to provide insights into predictions.
-* Adding visualizations to better represent user input and model predictions.
+Algorithm: K-Means Clustering
+Input Features: Annual Income + Spending Score (Age used optionally in training)
+Output: Discrete cluster assignments (0-N)
+Visualization: Pre-generated cluster plot (PNG)
 
 ## Installation (for local deployment)
 If you want to run the application locally, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/credit_eligibility_application.git
-   cd credit_eligibility_application
+   git clone https://github.com/ding0055/Regression_Models_Solution
+   cd Regression_Models_Solution
 
 2. Create and activate a virtual environment:
    ```bash
@@ -58,4 +58,4 @@ If you want to run the application locally, follow these steps:
    ```bash
    streamlit run app.py
 
-#### Thank you for using the Credit Eligibility Application! Feel free to share your feedback.
+#### Thank you for using the Customer Segmentation Application! Feel free to share your feedback.
