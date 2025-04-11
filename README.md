@@ -58,4 +58,7 @@ If you want to run the application locally, follow these steps:
    ```bash
    streamlit run app.py
 
+## Streamlit App link:
+https://regressionmodelapplution-g88lkmxawj8flt7vsc4y8s.streamlit.app/
+
 #### Thank you for using the Customer Segmentation Application! Feel free to share your feedback.
